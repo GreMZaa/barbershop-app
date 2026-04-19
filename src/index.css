@@ -42,6 +42,10 @@
     scrollbar-width: none;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   .wood-pattern {
     background-image: url("https://www.transparenttextures.com/patterns/dark-wood.png");
     opacity: 0.1;

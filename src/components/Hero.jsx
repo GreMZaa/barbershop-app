@@ -23,10 +23,25 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5, duration: 1 }}
-          className="text-gold-light/80 text-lg md:text-xl font-light tracking-[0.2em] uppercase italic"
+          className="text-gold-light/80 text-lg md:text-xl font-light tracking-[0.2em] uppercase italic mb-8"
         >
           {t.heroSubtitle}
         </motion.p>
+
+        <motion.button
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.8 }}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => {
+            const el = document.getElementById('services-section');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="bg-gold text-dark px-10 py-4 rounded-full font-black uppercase tracking-widest shadow-gold-glow hover:brightness-110 transition-all"
+        >
+          {t.bookNow}
+        </motion.button>
       </motion.div>
 
       {/* Backdrop elements for depth */}

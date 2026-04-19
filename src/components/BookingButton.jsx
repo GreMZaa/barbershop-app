@@ -18,12 +18,11 @@ const BookingButton = ({ bookingData, isValid, onBook }) => {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         whileTap={{ scale: 0.98 }}
-        disabled={!isValid}
         onClick={handleClick}
         className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.2em] shadow-gold-glow transition-all duration-500 overflow-hidden relative ${
           isValid 
             ? 'bg-gold text-dark' 
-            : 'bg-gold/10 text-gold/30 border border-gold/10'
+            : 'bg-gold/10 text-gold/40 border border-gold/10 hover:bg-gold/20'
         }`}
       >
         <AnimatePresence mode="wait">

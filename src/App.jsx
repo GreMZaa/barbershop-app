@@ -21,6 +21,18 @@ function App() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [bookingData, setBookingData] = useState(null);
 
+  // Refs for scrolling
+  const servicesRef = useRef(null);
+  const mastersRef = useRef(null);
+  const calendarRef = useRef(null);
+  const timeRef = useRef(null);
+
+  const scrollTo = (ref) => {
+    if (ref && ref.current) {
+      ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   // Initialize Telegram WebApp
   useEffect(() => {
     if (window.Telegram?.WebApp) {
@@ -35,7 +47,14 @@ function App() {
   const isValid = selectedService && selectedMaster && selectedDate && selectedTime;
 
   const handleBooking = () => {
-    if (!isValid) return;
+    if (!isValid) {
+      // Logic to scroll to the first missing field
+      if (!selectedService) scrollTo(servicesRef);
+      else if (!selectedMaster) scrollTo(mastersRef);
+      else if (!selectedDate) scrollTo(calendarRef);
+      else if (!selectedTime) scrollTo(timeRef);
+      return;
+    }
 
     const data = {
       service: selectedService,
@@ -61,7 +80,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-dark pb-32">
+    <div className="min-h-screen bg-dark pb-40">
       <SuccessScreen 
         isVisible={showSuccess} 
         bookingData={bookingData} 
@@ -79,13 +98,17 @@ function App() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
       >
-        <Services 
-          selectedService={selectedService} 
-          onSelect={(s) => {
-            setSelectedService(s);
-            triggerHaptic('light');
-          }} 
-        />
+        <div ref={servicesRef} id="services-section">
+          <Services 
+            selectedService={selectedService} 
+            onSelect={(s) => {
+              setSelectedService(s);
+              triggerHaptic('light');
+              // Small delay to allow the next section to appear in DOM before scrolling
+              setTimeout(() => scrollTo(mastersRef), 100);
+            }} 
+          />
+        </div>
 
         <AnimatePresence>
           {selectedService && (
@@ -94,12 +117,14 @@ function App() {
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
+              ref={mastersRef}
             >
               <Masters 
                 selectedMaster={selectedMaster} 
                 onSelect={(m) => {
                   setSelectedMaster(m);
                   triggerHaptic('light');
+                  setTimeout(() => scrollTo(calendarRef), 100);
                 }} 
               />
             </motion.div>
@@ -113,12 +138,14 @@ function App() {
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
+              ref={calendarRef}
             >
               <BookingCalendar 
                 selectedDate={selectedDate} 
                 onSelect={(d) => {
                   setSelectedDate(d);
                   triggerHaptic('light');
+                  setTimeout(() => scrollTo(timeRef), 100);
                 }} 
               />
             </motion.div>
@@ -132,6 +159,7 @@ function App() {
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden"
+              ref={timeRef}
             >
               <TimePicker 
                 selectedTime={selectedTime} 
