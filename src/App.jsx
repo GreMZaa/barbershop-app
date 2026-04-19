@@ -15,34 +15,6 @@ function App() {
   const { lang, t } = useLanguage();
   const { triggerHaptic } = useMiniAppSDK();
 
-  // Telegram MainButton integration
-  useEffect(() => {
-    const tg = window.Telegram?.WebApp;
-    if (tg?.MainButton) {
-      const mb = tg.MainButton;
-      
-      const onMainButtonClick = () => {
-        handleBooking();
-      };
-
-      if (isValid && !showSuccess) {
-        mb.setParams({
-          text: t.bookNow.toUpperCase(),
-          color: '#D4AF37',
-          text_color: '#0F0F0F',
-          is_visible: true,
-          is_active: true
-        });
-        mb.onClick(onMainButtonClick);
-      } else {
-        mb.hide();
-      }
-
-      return () => {
-        mb.offClick(onMainButtonClick);
-      };
-    }
-  }, [isValid, showSuccess, t.bookNow]);
 
   const [selectedService, setSelectedService] = useState(null);
   const [selectedMaster, setSelectedMaster] = useState(null);
@@ -85,7 +57,7 @@ function App() {
       return;
     }
 
-    const data = {
+  const data = {
       service: selectedService,
       master: selectedMaster,
       date: selectedDate,
@@ -96,6 +68,35 @@ function App() {
     triggerHaptic('success');
     setShowSuccess(true);
   };
+
+  // Telegram MainButton integration
+  useEffect(() => {
+    const tg = window.Telegram?.WebApp;
+    if (tg?.MainButton) {
+      const mb = tg.MainButton;
+      
+      const onMainButtonClick = () => {
+        handleBooking();
+      };
+
+      if (isValid && !showSuccess) {
+        mb.setParams({
+          text: t.bookNow.toUpperCase(),
+          color: '#D4AF37',
+          text_color: '#0F0F0F',
+          is_visible: true,
+          is_active: true
+        });
+        mb.onClick(onMainButtonClick);
+      } else {
+        mb.hide();
+      }
+
+      return () => {
+        mb.offClick(onMainButtonClick);
+      };
+    }
+  }, [isValid, showSuccess, t.bookNow]);
 
   return (
     <div className="min-h-screen bg-dark pb-40">
