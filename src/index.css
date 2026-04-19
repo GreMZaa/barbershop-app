@@ -1,0 +1,65 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark: #0F0F0F;
+  --color-gold: #D4AF37;
+  --color-gold-light: #F1D592;
+  --color-wood: #3D2B1F;
+  
+  --font-montserrat: "Montserrat", sans-serif;
+  
+  --shadow-gold-glow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+@layer base {
+  :root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  body {
+    margin: 0;
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bottom);
+    background-color: var(--color-dark);
+    color: white;
+    font-family: var(--font-montserrat);
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@layer utilities {
+  .text-shadow-gold {
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+  }
+  
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .wood-pattern {
+    background-image: url("https://www.transparenttextures.com/patterns/dark-wood.png");
+    opacity: 0.1;
+    pointer-events: none;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0F0F0F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 10px;
+}
