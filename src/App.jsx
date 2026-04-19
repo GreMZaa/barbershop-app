@@ -13,7 +13,7 @@ import useMiniAppSDK from './hooks/useMiniAppSDK';
 
 function App() {
   const { lang, t } = useLanguage();
-  const { triggerHaptic } = useMiniAppSDK();
+  const { isTelegram, triggerHaptic } = useMiniAppSDK();
 
 
   const [selectedService, setSelectedService] = useState(null);
@@ -194,14 +194,10 @@ function App() {
 
       <div className="safe-bottom">
         <BookingButton 
-          bookingData={{
-            service: selectedService,
-            master: selectedMaster,
-            date: selectedDate,
-            time: selectedTime
-          }}
-          isValid={isValid}
-          onBook={handleBooking}
+          bookingData={bookingData} 
+          isValid={isValid} 
+          isVisible={!(isTelegram && isValid)}
+          onBook={handleBooking} 
         />
       </div>
 

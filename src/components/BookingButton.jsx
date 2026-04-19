@@ -3,8 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
-const BookingButton = ({ bookingData, isValid, onBook }) => {
+const BookingButton = ({ bookingData, isValid, isVisible = true, onBook }) => {
   const { t } = useLanguage();
+
+  if (!isVisible) return null;
 
   const handleClick = (e) => {
     e.stopPropagation();
