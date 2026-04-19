@@ -19,12 +19,18 @@
 
   body {
     margin: 0;
-    padding-top: var(--safe-top);
-    padding-bottom: var(--safe-bottom);
     background-color: var(--color-dark);
     color: white;
     font-family: var(--font-montserrat);
     -webkit-tap-highlight-color: transparent;
+  }
+
+  .safe-top {
+    padding-top: var(--safe-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: var(--safe-bottom);
   }
 }
 
