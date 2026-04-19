@@ -7,7 +7,7 @@ const BookingButton = ({ bookingData, isValid, onBook }) => {
   const { t } = useLanguage();
 
   const handleClick = () => {
-    if (isValid && onBook) {
+    if (onBook) {
       onBook();
     }
   };
