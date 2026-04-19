@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Hero from './components/Hero';
 import Services from './components/Services';
@@ -48,7 +48,7 @@ function App() {
 
   const isValid = selectedService && selectedMaster && selectedDate && selectedTime;
 
-  const handleBooking = () => {
+  const handleBooking = useCallback(() => {
     if (!isValid) {
       if (!selectedService) scrollTo(servicesRef);
       else if (!selectedMaster) scrollTo(mastersRef);
@@ -57,7 +57,7 @@ function App() {
       return;
     }
 
-  const data = {
+    const data = {
       service: selectedService,
       master: selectedMaster,
       date: selectedDate,
@@ -66,14 +66,12 @@ function App() {
 
     setBookingData(data);
     
-    // Send data to Telegram Bot
-    if (isTelegram) {
-      sendData(data);
-    }
+    // Send data to Telegram Bot (wrapped in SDK logic)
+    sendData(data);
     
     triggerHaptic('success');
     setShowSuccess(true);
-  };
+  }, [isValid, selectedService, selectedMaster, selectedDate, selectedTime, sendData, triggerHaptic]);
 
   // Telegram MainButton integration
   useEffect(() => {
@@ -82,6 +80,7 @@ function App() {
       const mb = tg.MainButton;
       
       const onMainButtonClick = () => {
+        triggerHaptic('medium'); // Immediate feedback
         handleBooking();
       };
 
@@ -102,10 +101,10 @@ function App() {
         mb.offClick(onMainButtonClick);
       };
     }
-  }, [isValid, showSuccess, t.bookNow]);
+  }, [isValid, showSuccess, t.bookNow, handleBooking, triggerHaptic]);
 
   return (
-    <div className="min-h-screen bg-dark pb-40">
+    <div className="min-h-screen bg-dark pb-60">
       <SuccessScreen 
         isVisible={showSuccess} 
         bookingData={bookingData} 
