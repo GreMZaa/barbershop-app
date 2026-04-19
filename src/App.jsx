@@ -48,7 +48,6 @@ function App() {
 
   const handleBooking = () => {
     if (!isValid) {
-      // Logic to scroll to the first missing field
       if (!selectedService) scrollTo(servicesRef);
       else if (!selectedMaster) scrollTo(mastersRef);
       else if (!selectedDate) scrollTo(calendarRef);
@@ -64,17 +63,6 @@ function App() {
     };
 
     setBookingData(data);
-    
-    // Prepare data for mini-app
-    const miniAppData = {
-      service: selectedService.name,
-      master: selectedMaster.name,
-      date: selectedDate.toISOString().split('T')[0],
-      time: selectedTime,
-      total: `${selectedService.price} ${t.currency}`
-    };
-
-    sendData(miniAppData);
     triggerHaptic('success');
     setShowSuccess(true);
   };
