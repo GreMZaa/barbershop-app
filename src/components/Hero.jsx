@@ -2,11 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 
-const Hero = () => {
+const Hero = ({ onStartBooking }) => {
   const { t } = useLanguage();
 
   return (
-    <section className="relative h-[60vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
+    <section className="relative h-[65vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden">
       <div className="absolute inset-0 wood-pattern" />
       <div className="absolute inset-0 bg-gradient-to-b from-dark/50 via-dark/80 to-dark" />
       
@@ -34,10 +34,7 @@ const Hero = () => {
           transition={{ delay: 0.8 }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => {
-            const el = document.getElementById('services-section');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }}
+          onClick={onStartBooking}
           className="bg-gold text-dark px-10 py-4 rounded-full font-black uppercase tracking-widest shadow-gold-glow hover:brightness-110 transition-all"
         >
           {t.bookNow}

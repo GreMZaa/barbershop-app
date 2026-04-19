@@ -91,7 +91,7 @@ function App() {
         <LangSwitcher />
       </div>
       
-      <Hero />
+      <Hero onStartBooking={() => scrollTo(servicesRef)} />
 
       <motion.div
         initial={{ opacity: 0 }}
