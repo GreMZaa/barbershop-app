@@ -7,14 +7,6 @@ import Proposal from './pages/Proposal';
 import { LanguageProvider } from './context/LanguageContext';
 import './index.css';
 
-// Debugging for Telegram Mini App
-window.onerror = function(msg, url, line, col, error) {
-  alert("Error: " + msg + "\nAt: " + url + ":" + line);
-};
-
-// Log start
-console.log("App initializing...");
-
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <LanguageProvider>
