@@ -13,7 +13,7 @@ import useMiniAppSDK from './hooks/useMiniAppSDK';
 
 function App() {
   const { lang, t } = useLanguage();
-  const { isTelegram, triggerHaptic } = useMiniAppSDK();
+  const { isTelegram, triggerHaptic, sendData } = useMiniAppSDK();
 
 
   const [selectedService, setSelectedService] = useState(null);
@@ -65,6 +65,12 @@ function App() {
     };
 
     setBookingData(data);
+    
+    // Send data to Telegram Bot
+    if (isTelegram) {
+      sendData(data);
+    }
+    
     triggerHaptic('success');
     setShowSuccess(true);
   };
