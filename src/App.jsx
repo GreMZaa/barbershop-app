@@ -1,46 +1,31 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from './context/LanguageContext';
+import { useMiniAppSDK } from './hooks/useMiniAppSDK';
 import Hero from './components/Hero';
 import Services from './components/Services';
 import Masters from './components/Masters';
 import BookingCalendar from './components/BookingCalendar';
 import TimePicker from './components/TimePicker';
-import BookingButton from './components/BookingButton';
-import LangSwitcher from './components/LangSwitcher';
 import SuccessScreen from './components/SuccessScreen';
-import { useLanguage } from './context/LanguageContext';
-import useMiniAppSDK from './hooks/useMiniAppSDK';
+import LanguageSwitcher from './components/LanguageSwitcher';
+import CheckoutForm from './components/CheckoutForm';
+import UserProfile from './components/UserProfile';
+import { UserCircle } from 'lucide-react';
 
-function App() {
-  const { lang, t } = useLanguage();
-  const { isTelegram, triggerHaptic, sendData } = useMiniAppSDK();
-
-
-  const [selectedService, setSelectedService] = useState(null);
-  const [selectedMaster, setSelectedMaster] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedTime, setSelectedTime] = useState(null);
+const App = () => {
+  const { t } = useLanguage();
+  const { sdk, sendData, triggerHaptic } = useMiniAppSDK();
+  
+  const [step, setStep] = useState(0);
+  const [bookingData, setBookingData] = useState({
+    service: null,
+    master: null,
+    date: null,
+    time: null,
+    client: JSON.parse(localStorage.getItem('user_profile')) || null
+  });
   const [showSuccess, setShowSuccess] = useState(false);
-  const [bookingData, setBookingData] = useState(null);
-
-  // Refs for scrolling
-  const servicesRef = useRef(null);
-  const mastersRef = useRef(null);
-  const calendarRef = useRef(null);
-  const timeRef = useRef(null);
-
-  const scrollTo = (ref) => {
-    if (ref && ref.current) {
-      ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
-
-  // Initialize Telegram WebApp
-  useEffect(() => {
-    if (window.Telegram?.WebApp) {
-      const tg = window.Telegram.WebApp;
-      tg.ready();
-      tg.expand();
       tg.setHeaderColor('#0F0F0F');
       tg.setBackgroundColor('#0F0F0F');
     }
