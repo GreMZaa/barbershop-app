@@ -63,7 +63,7 @@ const Proposal = () => {
           <div className="w-1 h-8 bg-gold rounded-full shadow-gold-glow animate-pulse" />
           <div>
             <h2 className="text-[8px] font-black uppercase tracking-[0.4em] text-white/40 mb-0.5">
-              PRESENTATION • NGHIA 79
+              EXECUTIVE PRESENTATION
             </h2>
             <h1 className="text-sm font-black text-gold uppercase tracking-widest leading-none">
               {t.proposal.badge}

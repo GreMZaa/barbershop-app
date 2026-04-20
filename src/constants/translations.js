@@ -1,6 +1,6 @@
 export const translations = {
   RU: {
-    heroTitle: "Nghia 79 Barber Shop",
+    heroTitle: "Premium Barber Shop",
     heroSubtitle: "Лучший мужской стиль в Нячанге",
     servicesTitle: "Услуги",
     mastersTitle: "Наши мастера",
@@ -47,7 +47,7 @@ export const translations = {
     },
     profile: {
       title: "Профиль",
-      history: "История Nghia 79",
+      history: "История визитов",
       noHistory: "История пуста",
       lastVisit: "Последний визит",
       completed: "Завершено"
@@ -63,7 +63,7 @@ export const translations = {
     },
     proposal: {
       badge: "Бизнес-презентация",
-      heroTitle: "Nghia 79:",
+      heroTitle: "Бизнес-презентация",
       heroSubtitle: "Цифровая трансформация салона",
       wantBtn: "Хочу",
       viewDemoBtn: "Посмотреть демо",
@@ -89,11 +89,11 @@ export const translations = {
           impact: "Ваш личный цифровой сервис уровня ТОП-салонов."
         }
       ],
-      footer: "Разработано специально для директора 'Nghia 79'"
+      footer: "Разработано специально для Директора"
     }
   },
   VN: {
-    heroTitle: "Nghia 79 Barber Shop",
+    heroTitle: "Premium Barber Shop",
     heroSubtitle: "Combo cắt tóc nam số 1 Nha Trang",
     servicesTitle: "Dịch vụ",
     mastersTitle: "Thợ của chúng tôi",
@@ -140,7 +140,7 @@ export const translations = {
     },
     profile: {
       title: "Cá nhân",
-      history: "Lịch sử Nghia 79",
+      history: "Lịch sử đặt lịch",
       noHistory: "Chưa có dữ liệu",
       lastVisit: "Lần trước",
       completed: "Hoàn thành"
@@ -156,7 +156,7 @@ export const translations = {
     },
     proposal: {
       badge: "Dự án chuyển đổi số",
-      heroTitle: "Nghia 79:",
+      heroTitle: "Dự án chuyển đổi số",
       heroSubtitle: "Đẳng cấp kinh doanh mới",
       wantBtn: "Tôi muốn",
       viewDemoBtn: "Xem bản demo",
@@ -182,7 +182,7 @@ export const translations = {
           impact: "Dịch vụ số riêng biệt đẳng cấp Salon hàng đầu."
         }
       ],
-      footer: "Dành riêng cho Giám đốc 'Nghia 79'"
+      footer: "Dành riêng cho Giám đốc"
     }
   }
 };

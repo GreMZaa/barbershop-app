@@ -49,7 +49,7 @@ const App = () => {
       id: Date.now(),
       status: 'pending',
       timestamp: new Date().toISOString(),
-      shopName: "Nghia 79 Barber Shop"
+      shopName: "Your Premium Barber Shop"
     };
 
     const history = [...stateRef.current.userBookings, finalBooking];

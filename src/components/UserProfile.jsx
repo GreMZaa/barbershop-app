@@ -10,7 +10,7 @@ const UserProfile = ({ isOpen, onClose, userData, bookings = [] }) => {
     {
       id: 'mock-1',
       service: 'complex',
-      master: 'Nghia 79',
+      master: 'Senior Barber',
       date: '10.03.2026',
       time: '11:00',
       status: 'completed'
@@ -117,7 +117,7 @@ const UserProfile = ({ isOpen, onClose, userData, bookings = [] }) => {
         <div className="p-8 pt-0">
            <div className="bg-gold/5 rounded-2xl p-4 border border-gold/10 text-center">
               <p className="text-[10px] text-gold/60 uppercase tracking-widest font-bold">
-                {t.proposal?.footer || 'Nghia 79 Barber Shop'}
+                {t.proposal?.footer || 'Premium Barber Shop'}
               </p>
            </div>
         </div>
