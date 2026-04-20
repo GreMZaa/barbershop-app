@@ -86,13 +86,12 @@ const App = () => {
     }
   }, []);
 
-  // Separate effect for Native MainButton logic to ensure clean binding
-  useEffect(() => {
-    const tg = window.Telegram?.WebApp;
-    if (!tg?.MainButton) return;
+  const handleMainButtonClick = useCallback(() => {
+    const { step, showSuccess, showCheckout } = stateRef.current;
+    if (showSuccess || showCheckout) return;
 
     const isStepValid = () => {
-      const { step, bookingData } = stateRef.current;
+      const { bookingData } = stateRef.current;
       if (step === 0) return true;
       if (step === 1) return !!bookingData.service;
       if (step === 2) return !!bookingData.master;
@@ -101,47 +100,72 @@ const App = () => {
       return false;
     };
 
-    const handleMainButtonClick = () => {
-      const { step, showSuccess, showCheckout } = stateRef.current;
-      if (showSuccess || showCheckout) return;
-
-      if (isStepValid()) {
-        if (step < 4) {
-          setStep(prev => prev + 1);
-        } else if (step === 4) {
-          handleBooking();
-        }
+    if (isStepValid()) {
+      if (step < 4) {
+        setStep(prev => prev + 1);
+      } else if (step === 4) {
+        handleBooking();
       }
+    }
+  }, [handleBooking]);
+
+  // Sync Telegram MainButton
+  useEffect(() => {
+    const tg = window.Telegram?.WebApp;
+    if (!tg?.MainButton) return;
+
+    const { step, showSuccess, showCheckout, bookingData } = stateRef.current;
+    
+    const isStepValid = () => {
+      if (step === 0) return true;
+      if (step === 1) return !!bookingData.service;
+      if (step === 2) return !!bookingData.master;
+      if (step === 3) return !!bookingData.date;
+      if (step === 4) return !!bookingData.time;
+      return false;
     };
 
-    const updateButton = () => {
-      const { step, showSuccess, showCheckout } = stateRef.current;
-      if (isStepValid() && step > 0 && !showSuccess && !showCheckout) {
-        tg.MainButton.setText(step === 4 ? t.confirmBooking.toUpperCase() : t.bookNow.toUpperCase());
-        tg.MainButton.show();
-      } else {
-        tg.MainButton.hide();
-      }
-    };
+    const isVisible = isStepValid() && step > 0 && !showSuccess && !showCheckout;
 
-    updateButton();
+    if (isVisible) {
+      tg.MainButton.setText(step === 4 ? t.confirmBooking.toUpperCase() : t.bookNow.toUpperCase());
+      tg.MainButton.show();
+      tg.MainButton.enable();
+    } else {
+      tg.MainButton.hide();
+    }
+
     tg.MainButton.onClick(handleMainButtonClick);
-
     return () => {
       tg.MainButton.offClick(handleMainButtonClick);
     };
-  }, [step, bookingData, showSuccess, showCheckout, t, handleBooking]);
+  }, [step, bookingData, showSuccess, showCheckout, t, handleMainButtonClick]);
 
-  if (showSuccess) return <SuccessScreen isVisible={true} bookingData={bookingData} onClose={() => {
-    setShowSuccess(false);
-    setStep(0);
-  }} />;
+  // Native app initialization
+  useEffect(() => {
+    if (window.Telegram?.WebApp) {
+      const tg = window.Telegram.WebApp;
+      tg.ready();
+      tg.expand();
+      tg.setHeaderColor('#0F0F0F');
+      tg.setBackgroundColor('#0F0F0F');
+    }
+  }, []);
 
-  return (
-    <div className="min-h-screen bg-dark safe-top safe-bottom pb-60 relative overflow-x-hidden select-none">
+    <div className="min-h-screen bg-dark safe-bottom relative overflow-x-hidden select-none pb-32">
+      {showSuccess && (
+        <SuccessScreen 
+          isVisible={true} 
+          bookingData={bookingData} 
+          onClose={() => {
+            setShowSuccess(false);
+            setStep(0);
+          }} 
+        />
+      )}
       <div className="wood-pattern fixed inset-0 z-0 opacity-10 pointer-events-none" />
       
-      <header className="relative z-20 px-6 py-6 flex justify-between items-center bg-gradient-to-b from-dark to-transparent backdrop-blur-sm sticky top-0">
+      <header className="relative z-[60] px-6 py-6 flex justify-between items-center bg-gradient-to-b from-dark to-transparent backdrop-blur-sm sticky top-0 safe-top">
         <LangSwitcher />
         <button 
           onClick={() => setIsProfileOpen(true)}
@@ -151,7 +175,7 @@ const App = () => {
         </button>
       </header>
 
-      <main className="relative z-10 px-4">
+      <main className="relative z-10 px-4 pt-4">
         <AnimatePresence mode="wait">
           {showCheckout ? (
             <CheckoutForm 
@@ -213,12 +237,16 @@ const App = () => {
         </AnimatePresence>
       </main>
 
-      <UserProfile 
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
-        userData={bookingData.client}
-        bookings={userBookings}
-      />
+      <AnimatePresence>
+        {isProfileOpen && (
+          <UserProfile 
+            isOpen={isProfileOpen}
+            onClose={() => setIsProfileOpen(false)}
+            userData={bookingData.client}
+            bookings={userBookings}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Browser-only fallback button (Hidden in Telegram) */}
       {!isTelegram && step > 0 && !showSuccess && !showCheckout && (

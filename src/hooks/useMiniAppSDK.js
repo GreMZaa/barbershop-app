@@ -1,24 +1,24 @@
 import { useCallback, useState, useEffect } from 'react';
 
 const useMiniAppSDK = () => {
-  const [isTelegram, setIsTelegram] = useState(!!window.Telegram?.WebApp);
+  const [isTelegram, setIsTelegram] = useState(!!(window.Telegram?.WebApp?.initData && window.Telegram?.WebApp?.platform !== 'unknown'));
   const [isZalo, setIsZalo] = useState(!!window.ZaloPay || !!window.zmpSdk);
 
   useEffect(() => {
-    // Re-check environment on mount and if globals change
     const checkEnv = () => {
-      setIsTelegram(!!window.Telegram?.WebApp);
+      const tg = window.Telegram?.WebApp;
+      const isTG = !!(tg && tg.initData && tg.platform !== 'unknown');
+      setIsTelegram(isTG);
       setIsZalo(!!window.ZaloPay || !!window.zmpSdk);
     };
     
     checkEnv();
-    // Add small delay to catch late-injected SDKs
     const timer = setTimeout(checkEnv, 500);
     return () => clearTimeout(timer);
   }, []);
 
   const triggerHaptic = useCallback((style = 'medium') => {
-    if (isTelegram) {
+    if (window.Telegram?.WebApp?.HapticFeedback) {
       try {
         window.Telegram.WebApp.HapticFeedback.impactOccurred(style);
       } catch (e) {
@@ -27,31 +27,30 @@ const useMiniAppSDK = () => {
     } else if (isZalo && window.zmpSdk?.vibrate) {
       window.zmpSdk.vibrate({ type: 'selection' });
     }
-  }, [isTelegram, isZalo]);
+  }, [isZalo]);
 
   const closeApp = useCallback(() => {
-    if (isTelegram) {
+    if (window.Telegram?.WebApp) {
       window.Telegram.WebApp.close();
     } else if (isZalo && window.zmpSdk?.closeApp) {
       window.zmpSdk.closeApp();
     } else {
-      window.location.href = 'about:blank';
+      window.close();
     }
-  }, [isTelegram, isZalo]);
+  }, [isZalo]);
 
   const sendData = useCallback((data) => {
     const jsonStr = JSON.stringify(data);
-    if (isTelegram) {
+    if (window.Telegram?.WebApp) {
       try {
         window.Telegram.WebApp.sendData(jsonStr);
       } catch (e) {
         console.error('Telegram sendData failed:', e);
-        // We don't throw here so the UI can proceed to success screen
       }
     } else {
       console.log('Universal SendData:', jsonStr);
     }
-  }, [isTelegram]);
+  }, []);
 
   return {
     isTelegram,
@@ -59,7 +58,8 @@ const useMiniAppSDK = () => {
     isBrowser: !isTelegram && !isZalo,
     triggerHaptic,
     closeApp,
-    sendData
+    sendData,
+    tg: window.Telegram?.WebApp
   };
 };
 

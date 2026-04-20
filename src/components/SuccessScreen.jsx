@@ -60,21 +60,21 @@ const SuccessScreen = ({ bookingData, isVisible }) => {
             <div className="space-y-4 text-left">
               <div className="flex justify-between items-baseline">
                 <span className="text-gold/40 text-[10px] uppercase">{t.selectMaster}</span>
-                <span className="text-white font-bold">{bookingData.master.name}</span>
+                <span className="text-white font-bold">{bookingData?.master?.name || '—'}</span>
               </div>
               <div className="flex justify-between items-baseline">
                 <span className="text-gold/40 text-[10px] uppercase">{t.servicesTitle}</span>
-                <span className="text-white font-bold">{bookingData.service.name}</span>
+                <span className="text-white font-bold">{bookingData?.service?.name || '—'}</span>
               </div>
               <div className="flex justify-between items-baseline">
                 <span className="text-gold/40 text-[10px] uppercase">{t.selectDate}</span>
                 <span className="text-white font-bold">
-                  {bookingData.date?.toLocaleDateString()}
+                  {bookingData?.date?.toLocaleDateString ? bookingData.date.toLocaleDateString() : '—'}
                 </span>
               </div>
               <div className="flex justify-between items-baseline">
                 <span className="text-gold/40 text-[10px] uppercase">{t.selectTime}</span>
-                <span className="text-white font-bold text-xl text-gold">{bookingData.time}</span>
+                <span className="text-white font-bold text-xl text-gold">{bookingData?.time || '—'}</span>
               </div>
             </div>
           </motion.div>
