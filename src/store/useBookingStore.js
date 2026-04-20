@@ -78,8 +78,48 @@ const useBookingStore = create(
       })),
 
       setShowSuccess: (showSuccess) => set({ showSuccess }),
-      setShowCheckout: (showCheckout) => set({ showCheckout }),
+      setShowCheckout: (setShowCheckout) => set({ setShowCheckout }),
       setIsProfileOpen: (isProfileOpen) => set({ isProfileOpen }),
+
+      initializeDemoData: () => {
+        const demoClient = {
+          name: "Alexander G.",
+          phone: "+84 90 123 4567",
+          avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alexander"
+        };
+
+        const demoHistory = [
+          {
+            id: 'prev-1',
+            service: { id: 1, name: 'Executive Combo', price: 600000 },
+            master: { id: 1, name: 'Alex' },
+            date: '2024-04-15',
+            time: '14:30',
+            status: 'completed'
+          },
+          {
+            id: 'prev-2',
+            service: { id: 2, name: 'Classic Haircut', price: 350000 },
+            master: { id: 2, name: 'Max' },
+            date: '2024-03-20',
+            time: '11:00',
+            status: 'completed'
+          },
+          {
+            id: 'prev-3',
+            service: { id: 3, name: 'Beard Trim & Shape', price: 250000 },
+            master: { id: 3, name: 'Dmitry' },
+            date: '2024-02-10',
+            time: '16:00',
+            status: 'completed'
+          }
+        ];
+
+        set((state) => ({
+          bookingData: { ...state.bookingData, client: demoClient },
+          userHistory: demoHistory
+        }));
+      },
 
       // Computed/Helpers
       isStepValid: () => {

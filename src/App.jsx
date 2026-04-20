@@ -23,8 +23,16 @@ const App = () => {
     bookingData,
     showSuccess, setShowSuccess, 
     showCheckout, setShowCheckout,
-    isProfileOpen, setIsProfileOpen 
+    isProfileOpen, setIsProfileOpen,
+    userHistory, initializeDemoData
   } = useBookingStore();
+
+  // Initialize demo data if history is empty
+  useEffect(() => {
+    if (userHistory && userHistory.length === 0) {
+      initializeDemoData();
+    }
+  }, [userHistory, initializeDemoData]);
 
   // Telegram SDK Init
   useEffect(() => {
