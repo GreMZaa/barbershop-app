@@ -37,19 +37,19 @@ const Proposal = () => {
       <div className="wood-pattern fixed inset-0 z-0 opacity-5 pointer-events-none" />
       
       {/* Header Info */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-8 py-8 flex justify-between items-start pointer-events-none">
+      <header className="fixed top-0 left-0 right-0 z-50 px-6 pt-12 pb-6 flex justify-between items-start pointer-events-none bg-gradient-to-b from-dark via-dark/50 to-transparent">
         <div className="flex items-center gap-4 pointer-events-auto">
-          <div className="w-1.5 h-12 bg-gold rounded-full shadow-gold-glow" />
+          <div className="w-1 h-10 bg-gold rounded-full shadow-gold-glow" />
           <div>
-            <h2 className="text-[10px] font-black uppercase tracking-[0.5em] text-white/30 mb-1">
+            <h2 className="text-[8px] font-black uppercase tracking-[0.5em] text-white/30 mb-0.5">
               PROPOSAL • 2024
             </h2>
-            <h1 className="text-xl font-black text-gold uppercase tracking-widest leading-none">
+            <h1 className="text-lg font-black text-gold uppercase tracking-widest leading-none">
               {t.proposal.heroTitle}
             </h1>
           </div>
         </div>
-        <div className="pointer-events-auto">
+        <div className="pointer-events-auto scale-90 origin-top-right">
           <LangSwitcher />
         </div>
       </header>
@@ -66,19 +66,19 @@ const Proposal = () => {
         ))}
       </div>
 
-      <main className="flex-1 flex flex-col justify-center px-8 md:px-16 relative z-10">
+      <main className="flex-1 flex flex-col justify-center px-6 md:px-16 pt-32 pb-48 relative z-10 overflow-y-auto">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlide}
-            initial={{ opacity: 0, y: 30, scale: 0.98 }}
+            initial={{ opacity: 0, y: 20, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -30, scale: 0.98 }}
+            exit={{ opacity: 0, y: -20, scale: 0.98 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-4xl"
+            className="max-w-4xl mx-auto w-full"
           >
             <div className="relative">
                {/* Slide Number */}
-               <div className="absolute -top-12 -left-4 text-7xl font-black text-white/5 select-none tracking-tighter">
+               <div className="absolute -top-16 -left-2 text-6xl font-black text-white/5 select-none tracking-tighter">
                  0{currentSlide + 1}
                </div>
 
@@ -86,12 +86,12 @@ const Proposal = () => {
                  initial={{ scale: 0.8, opacity: 0 }}
                  animate={{ scale: 1, opacity: 1 }}
                  transition={{ delay: 0.3 }}
-                 className="w-20 h-20 bg-gold/10 border border-gold/20 rounded-3xl flex items-center justify-center mb-10 shadow-gold-glow"
+                 className="w-16 h-16 bg-gold/10 border border-gold/20 rounded-2xl flex items-center justify-center mb-6 shadow-gold-glow"
                >
                  {icons[currentSlide]}
                </motion.div>
                
-               <h2 className="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[1.1] mb-8">
+               <h2 className="text-4xl md:text-8xl font-black uppercase tracking-tighter leading-[1.1] mb-6">
                  {slides[currentSlide].title.split(': ').map((part, i) => (
                    <span key={i} className={i === 1 || part.includes('Nghia 79') ? 'text-gold' : 'text-white'}>
                      {part}{i === 0 && <br/>}
@@ -99,14 +99,14 @@ const Proposal = () => {
                  ))}
                </h2>
                
-               <p className="text-xl md:text-3xl text-white/50 font-medium leading-relaxed max-w-2xl mb-12">
+               <p className="text-lg md:text-3xl text-white/50 font-medium leading-relaxed max-w-2xl mb-8">
                  {slides[currentSlide].desc}
                </p>
 
                <div className="flex gap-10 items-center">
-                  <div className="px-8 py-5 bg-white/5 border border-white/10 rounded-[2rem] backdrop-blur-md">
-                    <span className="text-[10px] uppercase font-black tracking-[0.3em] text-gold block mb-2 opacity-70">Impact</span>
-                    <span className="text-3xl font-black text-white tracking-tight">{slides[currentSlide].impact}</span>
+                  <div className="px-6 py-4 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md">
+                    <span className="text-[8px] uppercase font-black tracking-[0.3em] text-gold block mb-1 opacity-70">Impact</span>
+                    <span className="text-2xl font-black text-white tracking-tight">{slides[currentSlide].impact}</span>
                   </div>
                </div>
             </div>
@@ -115,47 +115,56 @@ const Proposal = () => {
       </main>
 
       {/* Navigation and Footer Area */}
-      <footer className="fixed bottom-0 left-0 right-0 p-8 md:p-12 z-20 flex flex-col md:flex-row justify-between items-center md:items-end gap-8 bg-gradient-to-t from-dark via-dark/80 to-transparent">
-         {/* Nav Buttons */}
-         <div className="flex gap-4">
-           <button 
-             onClick={prevSlide}
-             disabled={currentSlide === 0}
-             className="w-16 h-16 border-2 border-white/10 rounded-full flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/50 transition-all disabled:opacity-0 active:scale-90 bg-white/5"
-           >
-             <ChevronLeft size={28} />
-           </button>
-           <button 
-             onClick={nextSlide}
-             disabled={currentSlide === slides.length - 1}
-             className="w-16 h-16 border-2 border-white/10 rounded-full flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/50 transition-all disabled:opacity-0 active:scale-90 bg-white/5"
-           >
-             <ChevronRight size={28} />
-           </button>
-         </div>
+      <footer className="fixed bottom-0 left-0 right-0 p-6 md:p-12 z-50 bg-gradient-to-t from-dark via-dark/95 to-transparent">
+        <div className="max-w-7xl mx-auto flex flex-col items-center gap-6">
+          {/* Progress Indicator */}
+          <div className="flex items-center gap-3">
+             <div className="h-[1px] w-8 bg-gold/20" />
+             <p className="text-[10px] uppercase font-black tracking-[0.4em] text-gold">
+               {currentSlide + 1} / {slides.length}
+             </p>
+             <div className="h-[1px] w-8 bg-gold/20" />
+          </div>
 
-         <div className="flex flex-col items-center md:items-end w-full md:w-auto">
-            {currentSlide === slides.length - 1 ? (
-              <motion.button
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                onClick={() => navigate('/')}
-                className="w-full md:w-auto bg-gradient-to-r from-gold via-gold-light to-gold text-dark px-12 py-6 rounded-[2rem] font-black uppercase tracking-widest shadow-gold-glow flex items-center justify-center gap-4 hover:scale-105 active:scale-95 transition-all text-xl"
+          <div className="flex justify-between items-center w-full">
+            {/* Nav Buttons */}
+            <div className="flex gap-3">
+              <button 
+                onClick={prevSlide}
+                disabled={currentSlide === 0}
+                className="w-12 h-12 border border-white/10 rounded-full flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/50 transition-all disabled:opacity-0 active:scale-90 bg-white/5"
               >
-                {t.proposal.cta}
-                <ArrowRight size={24} />
-              </motion.button>
-            ) : (
-              <div className="text-center md:text-right">
-                <p className="text-[10px] uppercase font-black tracking-[0.6em] text-white/20 mb-1">
-                  {t.proposal.footer}
-                </p>
-                <p className="text-[10px] uppercase font-black tracking-[0.4em] text-gold/40">
-                  {currentSlide + 1} / {slides.length}
-                </p>
-              </div>
-            )}
-         </div>
+                <ChevronLeft size={20} />
+              </button>
+              <button 
+                onClick={nextSlide}
+                disabled={currentSlide === slides.length - 1}
+                className="w-12 h-12 border border-white/10 rounded-full flex items-center justify-center text-white/30 hover:text-gold hover:border-gold/50 transition-all disabled:opacity-0 active:scale-90 bg-white/5"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+
+            <div className="flex-1 px-4 text-center">
+               <p className="text-[8px] uppercase font-black tracking-[0.4em] text-white/20 leading-tight">
+                 {t.proposal.footer}
+               </p>
+            </div>
+
+            <div className="min-w-[48px] flex justify-end">
+               {currentSlide === slides.length - 1 && (
+                 <motion.button
+                   initial={{ scale: 0.9, opacity: 0 }}
+                   animate={{ scale: 1, opacity: 1 }}
+                   onClick={() => navigate('/')}
+                   className="bg-gold text-dark p-3 rounded-full shadow-gold-glow flex items-center justify-center hover:scale-110 active:scale-95 transition-all"
+                 >
+                   <ArrowRight size={24} />
+                 </motion.button>
+               )}
+            </div>
+          </div>
+        </div>
       </footer>
 
       {/* Decorative BG Lights */}

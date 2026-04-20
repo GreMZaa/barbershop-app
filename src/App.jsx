@@ -132,7 +132,7 @@ const App = () => {
     };
   }, [step, bookingData, showSuccess, showCheckout, t, handleBooking]);
 
-  if (showSuccess) return <SuccessScreen bookingData={bookingData} onClose={() => {
+  if (showSuccess) return <SuccessScreen isVisible={true} bookingData={bookingData} onClose={() => {
     setShowSuccess(false);
     setStep(0);
   }} />;
