@@ -8,7 +8,13 @@ import useMiniAppSDK from '../hooks/useMiniAppSDK';
 const UserProfile = () => {
   const { t } = useLanguage();
   const { triggerHaptic } = useMiniAppSDK();
-  const { bookingData, userHistory, setIsProfileOpen, setClient } = useBookingStore();
+  const { 
+    bookingData, 
+    userHistory, 
+    setIsProfileOpen, 
+    setClient,
+    initializeDemoData 
+  } = useBookingStore();
   const userData = bookingData.client;
 
   const handleClose = () => {
@@ -101,8 +107,17 @@ const UserProfile = () => {
 
             <div className="space-y-4">
               {userHistory.length === 0 ? (
-                <div className="py-12 text-center glass-panel rounded-3xl border-dashed border-white/10">
-                  <p className="text-white/20 text-xs font-black uppercase tracking-widest">{t.profile.noHistory}</p>
+                <div className="py-12 text-center glass-panel rounded-3xl border-dashed border-white/10 px-8">
+                  <p className="text-white/20 text-xs font-black uppercase tracking-widest mb-6">{t.profile.noHistory}</p>
+                  <button
+                    onClick={() => {
+                      initializeDemoData();
+                      triggerHaptic('medium');
+                    }}
+                    className="px-6 py-3 bg-gold/10 hover:bg-gold/20 border border-gold/30 text-gold text-[10px] font-black uppercase tracking-widest rounded-xl transition-premium active:scale-95"
+                  >
+                    Загрузить демо-данные
+                  </button>
                 </div>
               ) : (
                 userHistory.map((item, idx) => (
