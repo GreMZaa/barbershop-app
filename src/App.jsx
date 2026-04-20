@@ -20,6 +20,7 @@ const App = () => {
   
   const { 
     step, setStep, nextStep, isStepValid, 
+    bookingData,
     showSuccess, setShowSuccess, 
     showCheckout, setShowCheckout,
     isProfileOpen, setIsProfileOpen 
@@ -76,7 +77,7 @@ const App = () => {
 
     tg.MainButton.onClick(handleMainAction);
     return () => tg.MainButton.offClick(handleMainAction);
-  }, [step, isStepValid, showSuccess, showCheckout, t, handleMainAction, tg]);
+  }, [step, bookingData, isStepValid, showSuccess, showCheckout, t, handleMainAction, tg]);
 
   return (
     <div className="min-h-screen bg-dark mesh-bg safe-bottom relative overflow-x-hidden selection:bg-gold selection:text-dark pb-32">

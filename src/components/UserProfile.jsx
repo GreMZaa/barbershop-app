@@ -102,7 +102,7 @@ const UserProfile = () => {
             <div className="space-y-4">
               {userHistory.length === 0 ? (
                 <div className="py-12 text-center glass-panel rounded-3xl border-dashed border-white/10">
-                  <p className="text-white/20 text-xs font-black uppercase tracking-widest">No previous visits</p>
+                  <p className="text-white/20 text-xs font-black uppercase tracking-widest">{t.profile.noHistory}</p>
                 </div>
               ) : (
                 userHistory.map((item, idx) => (

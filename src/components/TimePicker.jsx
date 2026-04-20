@@ -25,7 +25,7 @@ const TimePicker = () => {
     <div className="py-8 bg-white/[0.02] rounded-[3rem] my-4 border border-white/5">
       <div className="px-8 mb-8">
         <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-1">{t.selectTime}</h3>
-        <p className="text-gold/40 text-[10px] font-black uppercase tracking-[0.2em]">Reserve your slot</p>
+        <p className="text-gold/40 text-[10px] font-black uppercase tracking-[0.2em]">{t.reserveSlot}</p>
       </div>
 
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 px-8 pb-4">

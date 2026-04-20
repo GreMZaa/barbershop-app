@@ -19,6 +19,8 @@ export const translations = {
     eliteStatus: "Элитный статус подтвержден",
     receipt: "Чек записи",
     appointmentWindow: "Окно записи",
+    checkAvailability: "Проверить свободные дни",
+    reserveSlot: "Зарезервировать время",
     autoclose: "Приложение закроется автоматически через 5 секунд",
     bookingSummary: "Детали вашей записи",
     adminTitle: "Панель администратора",
@@ -51,7 +53,7 @@ export const translations = {
     profile: {
       title: "Профиль",
       history: "История визитов",
-      noHistory: "История пуста",
+      noHistory: "История посещений пуста",
       lastVisit: "Последний визит",
       completed: "Завершено"
     },
@@ -115,6 +117,8 @@ export const translations = {
     eliteStatus: "Đẳng cấp dịch vụ đã xác nhận",
     receipt: "Hóa đơn đặt lịch",
     appointmentWindow: "Thời gian hẹn",
+    checkAvailability: "Kiểm tra lịch trống",
+    reserveSlot: "Đặt giờ làm tóc",
     autoclose: "Ứng dụng sẽ tự đóng sau 5 giây",
     bookingSummary: "Thông tin lịch hẹn",
     adminTitle: "Quản trị viên",
@@ -147,7 +151,7 @@ export const translations = {
     profile: {
       title: "Cá nhân",
       history: "Lịch sử đặt lịch",
-      noHistory: "Chưa có dữ liệu",
+      noHistory: "Bạn chưa có lịch hẹn nào",
       lastVisit: "Lần trước",
       completed: "Hoàn thành"
     },
