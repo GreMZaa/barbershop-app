@@ -115,8 +115,10 @@ const App = () => {
       </main>
 
       {/* Modals & Overlays */}
-      <UserProfile />
-      <SuccessScreen />
+      <AnimatePresence>
+        {isProfileOpen && <UserProfile key="user-profile" />}
+        {showSuccess && <SuccessScreen key="success-screen" />}
+      </AnimatePresence>
 
       {/* Browser Fallback Button */}
       {!isTelegram && step > 0 && !showSuccess && !showCheckout && (
