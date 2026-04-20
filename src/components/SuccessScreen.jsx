@@ -59,7 +59,7 @@ const SuccessScreen = () => {
         <h2 className="text-5xl font-black text-white uppercase tracking-tighter mb-2 leading-none">
           {t.success}
         </h2>
-        <p className="text-gold/60 text-xs font-black uppercase tracking-[0.4em] mb-12">Elite Status Confirmed</p>
+        <p className="text-gold/60 text-xs font-black uppercase tracking-[0.4em] mb-12">{t.eliteStatus}</p>
       </motion.div>
 
       <motion.div 
@@ -71,7 +71,7 @@ const SuccessScreen = () => {
         <div className="absolute top-0 left-0 right-0 h-1 gold-gradient opacity-40" />
         
         <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.3em] mb-8 border-b border-white/5 pb-4">
-          Booking Receipt
+          {t.receipt}
         </p>
         
         <div className="space-y-6 text-left">
@@ -94,7 +94,7 @@ const SuccessScreen = () => {
             </span>
           </div>
           <div className="flex justify-between items-center group pt-4 border-t border-white/5">
-            <span className="text-gold/40 text-[10px] font-black uppercase tracking-widest">Appointment Window</span>
+            <span className="text-gold/40 text-[10px] font-black uppercase tracking-widest">{t.appointmentWindow}</span>
             <span className="text-gold font-black text-2xl tracking-tighter shadow-gold-glow">
               {bookingData?.time || '—'}
             </span>

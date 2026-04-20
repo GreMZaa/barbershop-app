@@ -55,16 +55,21 @@ const App = () => {
     if (!tg?.MainButton) return;
 
     const valid = isStepValid();
-    const isVisible = valid && step > 0 && !showSuccess && !showCheckout;
+    const isVisible = step > 0 && !showSuccess && !showCheckout;
 
     if (isVisible) {
       tg.MainButton.setText(step === 4 ? t.confirmBooking.toUpperCase() : t.bookNow.toUpperCase());
       tg.MainButton.setParams({
-        color: '#D4AF37',
-        text_color: '#0F0F0F'
+        color: valid ? '#D4AF37' : '#222222',
+        text_color: valid ? '#0F0F0F' : '#555555',
+        is_active: valid,
+        is_visible: true
       });
-      tg.MainButton.show();
-      tg.MainButton.enable();
+      if (valid) {
+        tg.MainButton.enable();
+      } else {
+        tg.MainButton.disable();
+      }
     } else {
       tg.MainButton.hide();
     }
