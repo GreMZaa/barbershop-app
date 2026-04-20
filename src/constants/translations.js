@@ -62,25 +62,33 @@ export const translations = {
       new: "НОВЫЙ"
     },
     proposal: {
-      badge: "Nha Trang #1 Solution",
-      heroTitle: "Nghia 79 Barber Shop:",
-      heroSubtitle: "Будущее вашего бизнеса",
-      automationTitle: "Полный контроль",
-      automationDesc: "Освободите время админа. Nghia 79 записывает клиентов автоматически 24/7.",
-      revenueTitle: "Рост прибыли",
-      revenueDesc: "Ваш салон всегда полон. Авто-напоминания гарантируют, что клиент не опоздает.",
-      professionalismTitle: "Премиальный статус",
-      professionalismDesc: "Бренд Nghia 79 в каждом смартфоне Нячанга. Это уровень, который уважают.",
-      zaloComparison: {
-        title: "Бумага vs Система Nghia 79",
-        manual: "Записи теряются в блокноте",
-        auto: "100% Автоматизация",
-        history: "Клиент забыт через неделю",
-        crm: "База данных Nghia 79",
-        status: "Забыл предупредить клиента",
-        realtime: "Клиент видит всё онлайн"
-      },
-      footer: "Nghia 79 • Barber Shop Nha Trang"
+      badge: "Бизнес-презентация",
+      heroTitle: "Nghia 79:",
+      heroSubtitle: "Цифровая трансформация салона",
+      slides: [
+        {
+          title: "Проблема: Рутина",
+          desc: "Администратор тратит 40% времени на звонки и переписки в Zalo. Записи теряются, а клиенты забывают о визите.",
+          impact: "-25% потенциальной выручки"
+        },
+        {
+          title: "Решение: Своё приложение",
+          desc: "Собственная CRM-система и мини-апп. Клиент записывается сам за 15 секунд прямо в Telegram или Zalo.",
+          impact: "Работа 24/7 без админа"
+        },
+        {
+          title: "Рост прибыли",
+          desc: "Автоматические уведомления снижают процент 'неявок' на 40%. История стрижек позволяет делать персональные офферы.",
+          impact: "+35% возвращаемость клиентов"
+        },
+        {
+          title: "Премиальный бренд",
+          desc: "Свой цифровой сервис в Нячанге — это признак лидера рынка. Nghia 79 становится технологичным брендом №1.",
+          impact: "Имидж и доминирование"
+        }
+      ],
+      cta: "Попробовать демо-запись",
+      footer: "Разработано специально для директора 'Nghia 79'"
     }
   },
   VN: {
@@ -146,25 +154,33 @@ export const translations = {
       new: "MỚI"
     },
     proposal: {
-      badge: "Nha Trang #1 Solution",
-      heroTitle: "Nghia 79 Barber Shop:",
+      badge: "Dự án chuyển đổi số",
+      heroTitle: "Nghia 79:",
       heroSubtitle: "Đẳng cấp kinh doanh mới",
-      automationTitle: "Quản lý tự động",
-      automationDesc: "Giảm áp lực cho chủ tiệm. Nghia 79 tự động nhận lịch 24/7 không cần trực máy.",
-      revenueTitle: "Tăng doanh thu",
-      revenueDesc: "Tiệm luôn kín lịch. Hệ thống tự động nhắc khách giúp giảm 40% tình trạng bỏ hẹn.",
-      professionalismTitle: "Thương hiệu số 1",
-      professionalismDesc: "Thương hiệu Nghia 79 hiện diện chuyên nghiệp trên điện thoại của mọi khách hàng.",
-      zaloComparison: {
-        title: "Ghi chép tay vs Nghia 79 App",
-        manual: "Dễ nhầm lẫn, mất lịch khách",
-        auto: "Tự động hóa 100%",
-        history: "Khách quay lại không biết tên",
-        crm: "CRM lưu thông tin vĩnh viễn",
-        status: "Khách quên lịch hẹn",
-        realtime: "Nhắc lịch tự động chuyên nghiệp"
-      },
-      footer: "Nghia 79 • Barber Shop Nha Trang"
+      slides: [
+        {
+          title: "Vấn đề: Quản lý thủ công",
+          desc: "Admin mất 40% thời gian trả lời Zalo. Lịch hẹn bị sót, khách hàng hay quên giờ đến tiệm.",
+          impact: "Thất thoát 25% doanh thu"
+        },
+        {
+          title: "Giải pháp: Mini App riêng",
+          desc: "Hệ thống CRM và App riêng biệt. Khách tự đặt lịch chỉ trong 15 giây ngay trên Telegram/Zalo.",
+          impact: "Hoạt động 24/7 không cần admin"
+        },
+        {
+          title: "Tăng trưởng doanh thu",
+          desc: "Nhắc lịch tự động giúp giảm 40% tình trạng bỏ hẹn. Lưu lịch sử giúp chăm sóc khách quay lại tốt hơn.",
+          impact: "+35% tỷ lệ khách quay lại"
+        },
+        {
+          title: "Thương hiệu số 1 Nha Trang",
+          desc: "Sở hữu công nghệ riêng giúp Nghia 79 khẳng định vị thế dẫn đầu. Đẳng cấp mà khách hàng luôn tin tưởng.",
+          impact: "Vượt mặt mọi đối thủ"
+        }
+      ],
+      cta: "Trải nghiệm Đặt lịch thử",
+      footer: "Dành riêng cho Giám đốc 'Nghia 79'"
     }
   }
 };

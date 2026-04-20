@@ -15,7 +15,7 @@ import { UserCircle } from 'lucide-react';
 
 const App = () => {
   const { t } = useLanguage();
-  const { sdk, sendData, triggerHaptic } = useMiniAppSDK();
+  const { isTelegram, sendData, triggerHaptic } = useMiniAppSDK();
   
   const [step, setStep] = useState(0);
   const [bookingData, setBookingData] = useState({
@@ -30,21 +30,29 @@ const App = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [userBookings, setUserBookings] = useState(JSON.parse(localStorage.getItem('user_history')) || []);
 
+  // Use a ref to store the latest booking data and logic for TG callback
+  const stateRef = useRef({ step, bookingData, userBookings, showSuccess, showCheckout });
+  useEffect(() => {
+    stateRef.current = { step, bookingData, userBookings, showSuccess, showCheckout };
+  }, [step, bookingData, userBookings, showSuccess, showCheckout]);
+
   const handleBooking = useCallback(() => {
-    if (!bookingData.client) {
+    const { client } = stateRef.current.bookingData;
+    
+    if (!client) {
       setShowCheckout(true);
       return;
     }
 
     const finalBooking = {
-      ...bookingData,
+      ...stateRef.current.bookingData,
       id: Date.now(),
       status: 'pending',
       timestamp: new Date().toISOString(),
       shopName: "Nghia 79 Barber Shop"
     };
 
-    const history = [...userBookings, finalBooking];
+    const history = [...stateRef.current.userBookings, finalBooking];
     setUserBookings(history);
     localStorage.setItem('user_history', JSON.stringify(history));
 
@@ -58,13 +66,13 @@ const App = () => {
         window.Telegram.WebApp.close();
       }
     }, 4000);
-  }, [bookingData, userBookings, sendData, triggerHaptic]);
+  }, [sendData, triggerHaptic]);
 
   const handleCheckoutSubmit = (clientInfo) => {
     localStorage.setItem('user_profile', JSON.stringify(clientInfo));
     setBookingData(prev => ({ ...prev, client: clientInfo }));
     setShowCheckout(false);
-    // Proceed to final booking logic
+    // Proceed to final booking logic immediately
     setTimeout(() => handleBooking(), 100);
   };
 
@@ -78,8 +86,13 @@ const App = () => {
     }
   }, []);
 
+  // Separate effect for Native MainButton logic to ensure clean binding
   useEffect(() => {
+    const tg = window.Telegram?.WebApp;
+    if (!tg?.MainButton) return;
+
     const isStepValid = () => {
+      const { step, bookingData } = stateRef.current;
       if (step === 0) return true;
       if (step === 1) return !!bookingData.service;
       if (step === 2) return !!bookingData.master;
@@ -88,26 +101,36 @@ const App = () => {
       return false;
     };
 
-    const tg = window.Telegram?.WebApp;
-    if (tg?.MainButton) {
+    const handleMainButtonClick = () => {
+      const { step, showSuccess, showCheckout } = stateRef.current;
+      if (showSuccess || showCheckout) return;
+
+      if (isStepValid()) {
+        if (step < 4) {
+          setStep(prev => prev + 1);
+        } else if (step === 4) {
+          handleBooking();
+        }
+      }
+    };
+
+    const updateButton = () => {
+      const { step, showSuccess, showCheckout } = stateRef.current;
       if (isStepValid() && step > 0 && !showSuccess && !showCheckout) {
         tg.MainButton.setText(step === 4 ? t.confirmBooking.toUpperCase() : t.bookNow.toUpperCase());
         tg.MainButton.show();
-        tg.MainButton.onClick(() => {
-          if (step < 4) setStep(prev => prev + 1);
-          else handleBooking();
-        });
       } else {
         tg.MainButton.hide();
       }
-    }
+    };
+
+    updateButton();
+    tg.MainButton.onClick(handleMainButtonClick);
 
     return () => {
-      if (tg?.MainButton) {
-        tg.MainButton.offClick();
-      }
+      tg.MainButton.offClick(handleMainButtonClick);
     };
-  }, [step, bookingData, t, handleBooking, showSuccess, showCheckout]);
+  }, [step, showSuccess, showCheckout, t, handleBooking]);
 
   if (showSuccess) return <SuccessScreen bookingData={bookingData} onClose={() => {
     setShowSuccess(false);
@@ -197,7 +220,8 @@ const App = () => {
         bookings={userBookings}
       />
 
-      {(!window.Telegram?.WebApp?.MainButton?.isVisible) && step > 0 && !showSuccess && !showCheckout && (
+      {/* Browser-only fallback button (Hidden in Telegram) */}
+      {!isTelegram && step > 0 && !showSuccess && !showCheckout && (
         <div className="fixed bottom-10 left-0 right-0 px-6 z-50">
           <motion.button
             initial={{ y: 20, opacity: 0 }}
