@@ -65,29 +65,30 @@ export const translations = {
       badge: "Бизнес-презентация",
       heroTitle: "Nghia 79:",
       heroSubtitle: "Цифровая трансформация салона",
+      wantBtn: "Хочу",
+      viewDemoBtn: "Посмотреть демо",
       slides: [
         {
-          title: "Проблема: Рутина",
-          desc: "Администратор тратит 40% времени на звонки и переписки в Zalo. Записи теряются, а клиенты забывают о визите.",
-          impact: "-25% потенциальной выручки"
+          title: "Как сделать выручку больше?",
+          desc: "Я нашел причину почему от вас уходит 20% клиентов. И сейчас расскажу, и покажу, как можно эту проблему решить.",
+          impact: "25% клиентов уже бы записались к вам, пока вы это читаете"
         },
         {
-          title: "Решение: Своё приложение",
-          desc: "Собственная CRM-система и мини-апп. Клиент записывается сам за 15 секунд прямо в Telegram или Zalo.",
-          impact: "Работа 24/7 без админа"
+          title: "РЕШЕНИЕ: СВОЁ ПРИЛОЖЕНИЕ",
+          desc: "Собственная CRM-система и мини-апп. Клиент записывается сам за 15 секунд прямо в Zalo. Вы видите всех клиентов, подтвержденные записи, отклоненные записи, номера телефонов (они сохраняются отдельно, у вас будет всегда доступ к ним), так же клиентам будет отправлена авто-информация о записи.",
+          impact: "Работа 24/7 без админа: записи принимаются даже ночью, пока вы спите."
         },
         {
-          title: "Рост прибыли",
-          desc: "Автоматические уведомления снижают процент 'неявок' на 40%. История стрижек позволяет делать персональные офферы.",
-          impact: "+35% возвращаемость клиентов"
+          title: "РОСТ ПРИБЫЛИ",
+          desc: "У вас всегда будет доступ к контактам для рассылок. Вам не нужно отвлекаться на звонки во время работы — все записи сохраняются автоматически.",
+          impact: "Автоматический перевод решит проблему языкового барьера для иностранных клиентов."
         },
         {
-          title: "Премиальный бренд",
-          desc: "Свой цифровой сервис в Нячанге — это признак лидера рынка. Nghia 79 становится технологичным брендом №1.",
-          impact: "Имидж и доминирование"
+          title: "Внимание!",
+          desc: "Я вижу, вы уже хотите, чтобы это было исключительно для вас. Позвольте я покажу, как это будет выглядеть для вас и ваших клиентов.",
+          impact: "Ваш личный цифровой сервис уровня ТОП-салонов."
         }
       ],
-      cta: "Попробовать демо-запись",
       footer: "Разработано специально для директора 'Nghia 79'"
     }
   },
@@ -157,29 +158,30 @@ export const translations = {
       badge: "Dự án chuyển đổi số",
       heroTitle: "Nghia 79:",
       heroSubtitle: "Đẳng cấp kinh doanh mới",
+      wantBtn: "Tôi muốn",
+      viewDemoBtn: "Xem bản demo",
       slides: [
         {
-          title: "Vấn đề: Quản lý thủ công",
-          desc: "Admin mất 40% thời gian trả lời Zalo. Lịch hẹn bị sót, khách hàng hay quên giờ đến tiệm.",
-          impact: "Thất thoát 25% doanh thu"
+          title: "Làm thế nào để tăng doanh thu?",
+          desc: "Tôi đã tìm ra lý do tại sao bạn mất 20% khách hàng. Và bây giờ tôi sẽ kể và cho bạn biết làm thế nào để giải quyết vấn đề này.",
+          impact: "25% khách hàng lẽ ra đã đặt lịch hẹn rồi khi bạn đang đọc dòng này."
         },
         {
-          title: "Giải pháp: Mini App riêng",
-          desc: "Hệ thống CRM và App riêng biệt. Khách tự đặt lịch chỉ trong 15 giây ngay trên Telegram/Zalo.",
-          impact: "Hoạt động 24/7 không cần admin"
+          title: "GIẢI PHÁP: APP RIÊNG",
+          desc: "Hệ thống CRM và Mini App riêng. Khách tự đặt lịch trong 15 giây ngay trên Zalo. Bạn quản lý tất cả khách hàng, lịch hẹn, số điện thoại và thông báo tự động.",
+          impact: "Hoạt động 24/7 không cần admin: Nhận lịch ngay cả ban đêm khi bạn đang ngủ."
         },
         {
-          title: "Tăng trưởng doanh thu",
-          desc: "Nhắc lịch tự động giúp giảm 40% tình trạng bỏ hẹn. Lưu lịch sử giúp chăm sóc khách quay lại tốt hơn.",
-          impact: "+35% tỷ lệ khách quay lại"
+          title: "PHÁT TRIỂN LỢI NHUẬN",
+          desc: "Bạn luôn có danh sách khách hàng để gửi tin nhắn quảng bá. Không cần nghe điện thoại khi đang làm việc — mọi thứ tự động lưu lại.",
+          impact: "Tự động dịch ngôn ngữ xóa tan rào cản cho khách nước ngoài."
         },
         {
-          title: "Thương hiệu số 1 Nha Trang",
-          desc: "Sở hữu công nghệ riêng giúp Nghia 79 khẳng định vị thế dẫn đầu. Đẳng cấp mà khách hàng luôn tin tưởng.",
-          impact: "Vượt mặt mọi đối thủ"
+          title: "Chú ý!",
+          desc: "Tôi thấy bạn đã muốn sở hữu nó rồi. Hãy để tôi cho bạn thấy nó trông như thế nào cho bạn và khách hàng của bạn.",
+          impact: "Dịch vụ số riêng biệt đẳng cấp Salon hàng đầu."
         }
       ],
-      cta: "Trải nghiệm Đặt lịch thử",
       footer: "Dành riêng cho Giám đốc 'Nghia 79'"
     }
   }
