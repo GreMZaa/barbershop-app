@@ -131,7 +131,7 @@ const UserProfile = () => {
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <p className="text-gold font-black text-lg uppercase tracking-tighter mb-1">
-                          {t[item.service] || item.service}
+                          {typeof item.service === 'object' ? (t[item.service.name] || item.service.name) : (t[item.service] || item.service)}
                         </p>
                         <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest flex items-center gap-2">
                           <span className="w-1 h-1 bg-gold/40 rounded-full" />
