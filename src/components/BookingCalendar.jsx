@@ -3,46 +3,64 @@ import { motion } from 'framer-motion';
 import { format, addDays, isSameDay } from 'date-fns';
 import { ru, vi } from 'date-fns/locale';
 import { useLanguage } from '../context/LanguageContext';
+import useBookingStore from '../store/useBookingStore';
+import useMiniAppSDK from '../hooks/useMiniAppSDK';
 
-const BookingCalendar = ({ selectedDate, onSelect }) => {
+const BookingCalendar = () => {
   const { lang, t } = useLanguage();
+  const { triggerHaptic } = useMiniAppSDK();
+  const { bookingData, setBookingData, nextStep } = useBookingStore();
+  const selectedDate = bookingData.date;
+  
   const locale = lang === 'RU' ? ru : vi;
 
   // Generate next 14 days
   const dates = Array.from({ length: 14 }).map((_, i) => addDays(new Date(), i));
 
+  const handleSelect = (date) => {
+    setBookingData({ date });
+    triggerHaptic('light');
+    setTimeout(nextStep, 300);
+  };
+
   return (
-    <div className="py-6 px-6">
-      <h3 className="text-gold/60 text-sm uppercase tracking-widest mb-4">{t.selectDate}</h3>
-      <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+    <div className="py-8 bg-white/[0.02] rounded-[3rem] my-4 border border-white/5">
+      <div className="px-8 mb-8">
+        <h3 className="text-3xl font-black text-white uppercase tracking-tighter mb-1">{t.selectDate}</h3>
+        <p className="text-gold/40 text-[10px] font-black uppercase tracking-[0.2em]">Check availability</p>
+      </div>
+
+      <div className="flex gap-4 overflow-x-auto no-scrollbar px-8 pb-4 pt-2">
         {dates.map((date, index) => {
           const isSelected = selectedDate && isSameDay(date, selectedDate);
           return (
             <motion.div
               key={date.toString()}
-              whileHover={{ scale: 1.05 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: index * 0.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => onSelect(date)}
-              className={`flex-shrink-0 w-16 h-20 flex flex-col items-center justify-center rounded-2xl border transition-all duration-300 ${
+              onClick={() => handleSelect(date)}
+              className={`flex-shrink-0 w-20 h-28 flex flex-col items-center justify-center rounded-[2rem] border transition-premium relative overflow-hidden ${
                 isSelected
-                  ? 'bg-gold border-gold text-dark border-shadow-gold ring-1 ring-gold'
-                  : 'bg-dark/40 border-gold/10 text-white hover:border-gold/30'
+                  ? 'glass-panel-gold border-gold scale-105 z-10'
+                  : 'glass-panel hover:border-gold/30'
               }`}
             >
-              <span className="text-[10px] uppercase font-bold opacity-60">
+              <span className={`text-[10px] uppercase font-black mb-2 tracking-tighter ${isSelected ? 'text-gold' : 'text-white/30'}`}>
                 {format(date, 'EEE', { locale })}
               </span>
-              <span className="text-lg font-black tracking-tighter">
+              <span className={`text-2xl font-black tracking-tighter leading-none mb-1 ${isSelected ? 'text-white' : 'text-white/60'}`}>
                 {format(date, 'd')}
               </span>
-              <span className="text-[10px] uppercase font-medium opacity-60">
+              <span className={`text-[10px] uppercase font-bold tracking-widest ${isSelected ? 'text-gold/80' : 'text-white/20'}`}>
                 {format(date, 'MMM', { locale })}
               </span>
 
               {isSelected && (
                 <motion.div
-                  layoutId="dateCircle"
-                  className="absolute inset-0 bg-gold/20 blur-lg -z-10 rounded-full"
+                  layoutId="dateHighlight"
+                  className="absolute inset-0 bg-gold/5 pointer-events-none"
                 />
               )}
             </motion.div>

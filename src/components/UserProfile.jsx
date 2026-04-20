@@ -1,22 +1,26 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, User as UserIcon, Phone, History, Calendar, Clock } from 'lucide-react';
+import { X, User as UserIcon, Phone, History, Calendar, Clock, LogOut } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import useBookingStore from '../store/useBookingStore';
+import useMiniAppSDK from '../hooks/useMiniAppSDK';
 
-const UserProfile = ({ isOpen, onClose, userData, bookings = [] }) => {
+const UserProfile = () => {
   const { t } = useLanguage();
+  const { triggerHaptic } = useMiniAppSDK();
+  const { bookingData, userHistory, setIsProfileOpen, setClient } = useBookingStore();
+  const userData = bookingData.client;
 
-  const mockHistory = [
-    {
-      id: 'mock-1',
-      service: 'complex',
-      master: 'Senior Barber',
-      date: '10.03.2026',
-      time: '11:00',
-      status: 'completed'
-    },
-    ...bookings
-  ];
+  const handleClose = () => {
+    setIsProfileOpen(false);
+    triggerHaptic('light');
+  };
+
+  const handleLogout = () => {
+    setClient(null);
+    triggerHaptic('notification');
+    setIsProfileOpen(false);
+  };
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -24,100 +28,124 @@ const UserProfile = ({ isOpen, onClose, userData, bookings = [] }) => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        onClick={onClose}
-        className="absolute inset-0 bg-dark/80 backdrop-blur-md"
+        onClick={handleClose}
+        className="absolute inset-0 bg-dark/90 backdrop-blur-xl"
       />
       
       <motion.div
-        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        initial={{ opacity: 0, scale: 0.9, y: 40 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-        className="relative w-full max-w-md bg-dark border border-gold/20 rounded-[2.5rem] overflow-hidden shadow-2xl backdrop-blur-xl"
+        exit={{ opacity: 0, scale: 0.9, y: 40 }}
+        className="relative w-full max-w-md glass-panel rounded-[3.5rem] overflow-hidden shadow-2xl"
       >
         {/* Header */}
-        <div className="p-8 border-b border-gold/10 flex justify-between items-center bg-gradient-to-b from-gold/5 to-transparent">
+        <div className="p-10 pb-6 flex justify-between items-center bg-gradient-to-b from-white/5 to-transparent">
           <div>
-            <h2 className="text-2xl font-black text-white uppercase tracking-tighter leading-none">
+            <h2 className="text-3xl font-black text-white uppercase tracking-tighter leading-none">
               {t.profile.title}
             </h2>
-            <div className="w-8 h-0.5 bg-gold mt-2" />
+            <div className="w-10 h-1 gold-gradient mt-3 rounded-full" />
           </div>
           <button 
-            onClick={onClose}
-            className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/50 hover:text-gold transition-colors"
+            onClick={handleClose}
+            className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-gold transition-premium"
           >
-            <X size={20} />
+            <X size={24} />
           </button>
         </div>
 
-        <div className="p-8 space-y-8 max-h-[60vh] overflow-y-auto no-scrollbar">
-          {/* User Info */}
-          <div className="flex items-center gap-6 p-6 bg-gold/5 border border-gold/10 rounded-3xl">
-            <div className="w-16 h-16 rounded-2xl bg-gold/10 flex items-center justify-center text-gold shadow-gold-glow">
-              <UserIcon size={32} />
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-xl font-bold text-white truncate max-w-[200px]">
-                {userData?.name || 'Gentleman'}
-              </h3>
-              <div className="flex items-center gap-2 text-gold/60 text-xs">
-                <Phone size={12} />
-                <span>{userData?.phone || '—'}</span>
+        <div className="p-10 pt-4 space-y-10 max-h-[65vh] overflow-y-auto no-scrollbar">
+          {/* User Info Card */}
+          <div className="relative group">
+            <div className="absolute inset-0 gold-gradient blur-2xl opacity-10 group-hover:opacity-20 transition-premium" />
+            <div className="relative flex items-center gap-6 p-8 glass-panel-gold rounded-[2.5rem]">
+              <div className="w-20 h-20 rounded-3xl bg-gold/10 flex items-center justify-center text-gold shadow-gold-glow border border-gold/20">
+                <UserIcon size={40} strokeWidth={1} />
               </div>
+              <div className="flex-1 min-w-0">
+                <h3 className="text-2xl font-black text-white truncate uppercase tracking-tighter">
+                  {userData?.name || 'Gentleman'}
+                </h3>
+                <div className="flex items-center gap-2 text-gold/60 text-xs font-bold mt-1">
+                  <Phone size={14} />
+                  <span>{userData?.phone || '—'}</span>
+                </div>
+              </div>
+              {userData && (
+                <button 
+                  onClick={handleLogout}
+                  className="p-3 bg-white/5 hover:bg-red-500/10 text-white/20 hover:text-red-500 rounded-xl transition-premium"
+                >
+                  <LogOut size={18} />
+                </button>
+              )}
             </div>
           </div>
 
           {/* History Section */}
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h4 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 flex items-center gap-2">
-                <History size={14} />
+            <div className="flex items-center gap-4">
+              <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-gold">
+                <History size={16} />
+              </div>
+              <h4 className="text-sm font-black uppercase tracking-[0.3em] text-white/40">
                 {t.profile.history}
               </h4>
-              <div className="h-[1px] flex-1 bg-gold/10 ml-4" />
+              <div className="h-[1px] flex-1 bg-white/5" />
             </div>
 
             <div className="space-y-4">
-              {mockHistory.map((item, idx) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="p-5 bg-white/5 border border-white/5 rounded-3xl group hover:border-gold/30 transition-all"
-                >
-                  <div className="flex justify-between items-start mb-3">
-                    <div>
-                      <p className="text-gold font-bold text-sm uppercase tracking-wider">{t[item.service] || item.service}</p>
-                      <p className="text-[10px] text-white/30 uppercase tracking-widest mt-0.5">Master: {item.master}</p>
+              {userHistory.length === 0 ? (
+                <div className="py-12 text-center glass-panel rounded-3xl border-dashed border-white/10">
+                  <p className="text-white/20 text-xs font-black uppercase tracking-widest">No previous visits</p>
+                </div>
+              ) : (
+                userHistory.map((item, idx) => (
+                  <motion.div
+                    key={item.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="p-6 glass-panel rounded-[2rem] group hover:border-gold/30 transition-premium"
+                  >
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <p className="text-gold font-black text-lg uppercase tracking-tighter mb-1">
+                          {t[item.service] || item.service}
+                        </p>
+                        <p className="text-[10px] text-white/30 font-bold uppercase tracking-widest flex items-center gap-2">
+                          <span className="w-1 h-1 bg-gold/40 rounded-full" />
+                          Master: {item.master?.name || item.master}
+                        </p>
+                      </div>
+                      <div className={`px-3 py-1.5 rounded-xl text-[8px] font-black uppercase tracking-widest ${
+                        item.status === 'completed' ? 'bg-green-500/10 text-green-500 border border-green-500/20' : 'bg-gold/10 text-gold border border-gold/20 animate-pulse'
+                      }`}>
+                        {item.status === 'completed' ? t.profile.completed : (t.pending || 'Confirmed')}
+                      </div>
                     </div>
-                    <div className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-tighter ${
-                      item.status === 'completed' ? 'bg-green-500/20 text-green-500' : 'bg-gold/20 text-gold animate-pulse'
-                    }`}>
-                      {item.status === 'completed' ? t.profile.completed : (t.pending || 'In Progress')}
+                    
+                    <div className="flex gap-6 items-center pt-4 border-t border-white/5">
+                      <div className="flex items-center gap-2 text-[10px] text-white/40 font-bold uppercase tracking-tight">
+                        <Calendar size={14} className="text-gold/40" />
+                        <span>{item.date instanceof Date ? item.date.toLocaleDateString() : item.date}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-[10px] text-white/40 font-bold uppercase tracking-tight">
+                        <Clock size={14} className="text-gold/40" />
+                        <span>{item.time}</span>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="flex gap-4 items-center pt-3 border-t border-white/5">
-                    <div className="flex items-center gap-1.5 text-[10px] text-white/50">
-                      <Calendar size={12} className="text-gold/40" />
-                      <span>{item.date}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-[10px] text-white/50">
-                      <Clock size={12} className="text-gold/40" />
-                      <span>{item.time}</span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
+                  </motion.div>
+                ))
+              )}
             </div>
           </div>
         </div>
 
-        <div className="p-8 pt-0">
-           <div className="bg-gold/5 rounded-2xl p-4 border border-gold/10 text-center">
-              <p className="text-[10px] text-gold/60 uppercase tracking-widest font-bold">
-                {t.proposal?.footer || 'Premium Barber Shop'}
+        <div className="p-10 pt-4 pb-12">
+           <div className="glass-panel rounded-2xl p-4 text-center border-white/5">
+              <p className="text-[10px] text-white/10 uppercase tracking-[0.4em] font-black">
+                {t.proposal?.footer || 'Elite Standard Grooming'}
               </p>
            </div>
         </div>

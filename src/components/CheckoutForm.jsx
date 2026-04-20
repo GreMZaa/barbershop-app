@@ -1,30 +1,29 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { User, Phone, CheckCircle } from 'lucide-react';
+import { User, Phone, CheckCircle, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import useBookingStore from '../store/useBookingStore';
+import useMiniAppSDK from '../hooks/useMiniAppSDK';
 
-const CheckoutForm = ({ onSubmit, onBack, triggerHaptic }) => {
+const CheckoutForm = () => {
   const { t } = useLanguage();
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+  const { triggerHaptic } = useMiniAppSDK();
+  const { setClient, setShowCheckout, setShowSuccess, addBookingToHistory, bookingData, resetBooking } = useBookingStore();
+  
+  const [name, setName] = useState(bookingData.client?.name || '');
+  const [phone, setPhone] = useState(bookingData.client?.phone || '');
   const [error, setError] = useState('');
 
   const formatPhone = (value) => {
-    // Remove all non-digits
     const digits = value.replace(/\D/g, '');
-    
-    // Check for VN format (starts with 0, 9-10 digits)
     if (digits.startsWith('0') || (digits.length <= 10 && !digits.startsWith('7'))) {
       if (digits.length <= 10) return digits;
       return digits.slice(0, 10);
     }
-    
-    // Check for RU format (starts with 7 or 8, 11 digits)
     if (digits.startsWith('7') || digits.startsWith('8')) {
       if (digits.length <= 11) return '+' + digits;
       return '+' + digits.slice(0, 11);
     }
-
     return digits;
   };
 
@@ -46,84 +45,107 @@ const CheckoutForm = ({ onSubmit, onBack, triggerHaptic }) => {
       return;
     }
 
-    triggerHaptic('medium');
-    onSubmit({ name, phone });
+    const clientInfo = { name, phone };
+    setClient(clientInfo);
+    
+    // Simulate booking finalization
+    const finalBooking = {
+      ...bookingData,
+      client: clientInfo,
+      id: Date.now(),
+      status: 'confirmed',
+      timestamp: new Date().toISOString(),
+      shopName: "Elite Barber Shop"
+    };
+
+    triggerHaptic('success');
+    addBookingToHistory(finalBooking);
+    setShowCheckout(false);
+    setShowSuccess(true);
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
       className="max-w-md mx-auto px-6 py-10"
     >
-      <div className="text-center mb-10">
-        <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">
+      <div className="text-center mb-12">
+        <h2 className="text-4xl font-black text-white uppercase tracking-tighter mb-2 leading-none">
           {t.checkout.title}
         </h2>
-        <div className="w-12 h-1 bg-gold mx-auto rounded-full" />
+        <div className="w-16 h-1.5 gold-gradient mx-auto rounded-full" />
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <label className="text-[10px] uppercase tracking-[0.2em] text-gold/50 ml-1">
+      <form onSubmit={handleSubmit} className="space-y-8">
+        <div className="space-y-3">
+          <label className="text-[10px] uppercase tracking-[0.4em] text-gold/40 font-black ml-4">
             {t.clientName}
           </label>
           <div className="relative group">
-            <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gold/30 group-focus-within:text-gold transition-colors" size={18} />
+            <div className={`absolute inset-0 gold-gradient blur-xl opacity-0 group-focus-within:opacity-10 transition-premium`} />
+            <User className="absolute left-6 top-1/2 -translate-y-1/2 text-gold/30 group-focus-within:text-gold transition-premium" size={20} />
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder={t.checkout.namePlaceholder}
-              className="w-full bg-white/5 border border-gold/20 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold/30 transition-all placeholder:text-white/10"
+              className="w-full glass-panel-gold rounded-3xl py-6 pl-14 pr-6 text-white text-lg font-bold focus:border-gold transition-premium placeholder:text-white/10"
             />
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-[10px] uppercase tracking-[0.2em] text-gold/50 ml-1">
+        <div className="space-y-3">
+          <label className="text-[10px] uppercase tracking-[0.4em] text-gold/40 font-black ml-4">
             {t.checkout.phonePlaceholder}
           </label>
           <div className="relative group">
-            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gold/30 group-focus-within:text-gold transition-colors" size={18} />
+            <div className={`absolute inset-0 gold-gradient blur-xl opacity-0 group-focus-within:opacity-10 transition-premium`} />
+            <Phone className="absolute left-6 top-1/2 -translate-y-1/2 text-gold/30 group-focus-within:text-gold transition-premium" size={20} />
             <input
               type="tel"
               value={phone}
               onChange={handlePhoneChange}
               placeholder="+7... / 0..."
-              className="w-full bg-white/5 border border-gold/20 rounded-2xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold/30 transition-all placeholder:text-white/10"
+              className="w-full glass-panel-gold rounded-3xl py-6 pl-14 pr-6 text-white text-lg font-bold focus:border-gold transition-premium placeholder:text-white/10"
             />
           </div>
-          {phone.startsWith('+7') && <p className="text-[8px] text-blue-400 uppercase tracking-widest ml-1">🇷🇺 Russian Format Detected</p>}
-          {phone.startsWith('0') && <p className="text-[8px] text-red-400 uppercase tracking-widest ml-1">🇻🇳 Vietnam Format Detected</p>}
+          <div className="flex gap-4 ml-4">
+            {phone.startsWith('+7') && <p className="text-[9px] text-blue-400 font-black uppercase tracking-widest">🇷🇺 Russian Standard</p>}
+            {phone.startsWith('0') && <p className="text-[9px] text-red-500 font-black uppercase tracking-widest">🇻🇳 Vietnam Standard</p>}
+          </div>
         </div>
 
         {error && (
-          <motion.p 
+          <motion.div 
             initial={{ opacity: 0, x: -10 }} 
             animate={{ opacity: 1, x: 0 }}
-            className="text-red-500 text-xs font-bold ml-1"
+            className="px-6 py-3 bg-red-500/10 border border-red-500/30 rounded-2xl text-red-500 text-[10px] font-black uppercase tracking-widest text-center"
           >
             {error}
-          </motion.p>
+          </motion.div>
         )}
 
-        <div className="pt-4 space-y-4">
+        <div className="pt-6 space-y-6">
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-gold to-gold-light text-dark font-black py-4 rounded-2xl uppercase tracking-widest shadow-gold-glow active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+            className="w-full gold-gradient text-dark font-black py-6 rounded-[2rem] uppercase tracking-[0.2em] shadow-gold-glow active:scale-95 transition-premium flex items-center justify-center gap-3 text-lg"
           >
-            <CheckCircle size={18} />
+            <CheckCircle size={22} strokeWidth={3} />
             {t.checkout.submit}
           </button>
           
           <button
             type="button"
-            onClick={onBack}
-            className="w-full text-gold/40 text-[10px] uppercase font-black tracking-widest py-2"
+            onClick={() => {
+              triggerHaptic('light');
+              setShowCheckout(false);
+            }}
+            className="w-full text-white/20 hover:text-gold text-[10px] uppercase font-black tracking-[0.3em] py-4 transition-premium flex items-center justify-center gap-2"
           >
-            ← {t.selectTime}
+            <ArrowLeft size={14} />
+            {t.selectTime}
           </button>
         </div>
       </form>

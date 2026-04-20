@@ -1,75 +1,97 @@
 @import "tailwindcss";
 
 @theme {
-  --color-dark: #0F0F0F;
   --color-gold: #D4AF37;
-  --color-gold-light: #F1D592;
-  --color-wood: #3D2B1F;
-  
-  --font-montserrat: "Montserrat", sans-serif;
-  
-  --shadow-gold-glow: 0 0 20px rgba(212, 175, 55, 0.2);
-}
-
-@layer base {
-  :root {
-    --safe-top: env(safe-area-inset-top, 0px);
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-  }
-
-  body {
-    margin: 0;
-    background-color: var(--color-dark);
-    color: white;
-    font-family: var(--font-montserrat);
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .safe-top {
-    padding-top: var(--safe-top);
-  }
-
-  .safe-bottom {
-    padding-bottom: var(--safe-bottom);
-  }
+  --color-gold-light: #F1D279;
+  --color-gold-dark: #996515;
+  --color-dark: #0F0F0F;
+  --color-dark-lighter: #1A1A1A;
 }
 
 @layer utilities {
-  .text-shadow-gold {
-    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-  }
-  
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
   .wood-pattern {
-    background-image: url("https://www.transparenttextures.com/patterns/dark-wood.png");
-    opacity: 0.1;
-    pointer-events: none;
+    background-image: url('https://www.transparenttextures.com/patterns/dark-wood.png');
+  }
+
+  .text-shadow-gold {
+    text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+  }
+
+  .shadow-gold-glow {
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.15);
+  }
+
+  /* Premium Utilities */
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  .glass-panel-gold {
+    background: rgba(212, 175, 55, 0.03);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    backdrop-filter: blur(25px);
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.1);
+  }
+
+  .gold-gradient {
+    background: linear-gradient(135deg, #996515 0%, #D4AF37 50%, #F1D279 100%);
+  }
+
+  /* Mesh Gradient Background */
+  .mesh-bg {
+    background-color: #0F0F0F;
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(46,71%,52%,0.08) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(46,71%,52%,0.08) 0px, transparent 50%),
+      radial-gradient(at 50% 100%, hsla(46,71%,52%,0.04) 0px, transparent 50%);
+  }
+
+  .premium-text {
+    @apply tracking-tight font-black uppercase;
+  }
+
+  .transition-premium {
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
-::-webkit-scrollbar-track {
-  background: #0F0F0F;
+/* Telegram Safe Areas */
+.safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
 }
 
-::-webkit-scrollbar-thumb {
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+input:focus {
+  outline: none;
+}
+
+/* Custom Selection */
+::selection {
   background: #D4AF37;
-  border-radius: 10px;
+  color: #0F0F0F;
+}
+
+/* Button Pulse Animation */
+@keyframes gold-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+  70% { box-shadow: 0 0 0 20px rgba(212, 175, 55, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+.animate-gold-pulse {
+  animation: gold-pulse 2s infinite;
 }
