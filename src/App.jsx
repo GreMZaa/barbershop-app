@@ -130,7 +130,7 @@ const App = () => {
     return () => {
       tg.MainButton.offClick(handleMainButtonClick);
     };
-  }, [step, showSuccess, showCheckout, t, handleBooking]);
+  }, [step, bookingData, showSuccess, showCheckout, t, handleBooking]);
 
   if (showSuccess) return <SuccessScreen bookingData={bookingData} onClose={() => {
     setShowSuccess(false);
