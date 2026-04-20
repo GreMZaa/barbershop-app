@@ -6,19 +6,19 @@ const LangSwitcher = () => {
   const { lang, setLang } = useLanguage();
 
   return (
-    <div className="fixed top-4 right-4 z-50 flex bg-dark/80 backdrop-blur-md rounded-full p-1 border border-gold/30 shadow-gold-glow">
+    <div className="flex bg-white/5 backdrop-blur-xl rounded-2xl p-1.5 border border-gold/20 shadow-gold-glow pointer-events-auto">
       <button
         onClick={() => setLang('RU')}
-        className={`px-3 py-1 rounded-full text-xs font-bold transition-all duration-300 ${
-          lang === 'RU' ? 'bg-gold text-dark' : 'text-gold'
+        className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-widest transition-all duration-300 ${
+          lang === 'RU' ? 'bg-gold text-dark' : 'text-gold/60 hover:text-gold'
         }`}
       >
         RU
       </button>
       <button
         onClick={() => setLang('VN')}
-        className={`px-3 py-1 rounded-full text-xs font-bold transition-all duration-300 ${
-          lang === 'VN' ? 'bg-gold text-dark' : 'text-gold'
+        className={`px-4 py-2 rounded-xl text-[10px] font-black tracking-widest transition-all duration-300 ${
+          lang === 'VN' ? 'bg-gold text-dark' : 'text-gold/60 hover:text-gold'
         }`}
       >
         VN
