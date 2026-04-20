@@ -151,7 +151,7 @@ const App = () => {
       tg.setBackgroundColor('#0F0F0F');
     }
   }, []);
-
+  return (
     <div className="min-h-screen bg-dark safe-bottom relative overflow-x-hidden select-none pb-32">
       {showSuccess && (
         <SuccessScreen 
