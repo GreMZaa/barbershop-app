@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from './context/LanguageContext';
-import { useMiniAppSDK } from './hooks/useMiniAppSDK';
+import useMiniAppSDK from './hooks/useMiniAppSDK';
 import Hero from './components/Hero';
 import Services from './components/Services';
 import Masters from './components/Masters';
 import BookingCalendar from './components/BookingCalendar';
 import TimePicker from './components/TimePicker';
 import SuccessScreen from './components/SuccessScreen';
-import LanguageSwitcher from './components/LanguageSwitcher';
+import LangSwitcher from './components/LangSwitcher';
 import CheckoutForm from './components/CheckoutForm';
 import UserProfile from './components/UserProfile';
 import { UserCircle } from 'lucide-react';
@@ -26,174 +26,200 @@ const App = () => {
     client: JSON.parse(localStorage.getItem('user_profile')) || null
   });
   const [showSuccess, setShowSuccess] = useState(false);
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [userBookings, setUserBookings] = useState(JSON.parse(localStorage.getItem('user_history')) || []);
+
+  const handleBooking = useCallback(() => {
+    if (!bookingData.client) {
+      setShowCheckout(true);
+      return;
+    }
+
+    const finalBooking = {
+      ...bookingData,
+      id: Date.now(),
+      status: 'pending',
+      timestamp: new Date().toISOString(),
+      shopName: "Nghia 79 Barber Shop"
+    };
+
+    const history = [...userBookings, finalBooking];
+    setUserBookings(history);
+    localStorage.setItem('user_history', JSON.stringify(history));
+
+    sendData(finalBooking);
+    triggerHaptic('success');
+    setShowSuccess(true);
+    
+    // Auto-close for Telegram Mini App
+    setTimeout(() => {
+      if (window.Telegram?.WebApp) {
+        window.Telegram.WebApp.close();
+      }
+    }, 4000);
+  }, [bookingData, userBookings, sendData, triggerHaptic]);
+
+  const handleCheckoutSubmit = (clientInfo) => {
+    localStorage.setItem('user_profile', JSON.stringify(clientInfo));
+    setBookingData(prev => ({ ...prev, client: clientInfo }));
+    setShowCheckout(false);
+    // Proceed to final booking logic
+    setTimeout(() => handleBooking(), 100);
+  };
+
+  useEffect(() => {
+    if (window.Telegram?.WebApp) {
+      const tg = window.Telegram.WebApp;
+      tg.ready();
+      tg.expand();
       tg.setHeaderColor('#0F0F0F');
       tg.setBackgroundColor('#0F0F0F');
     }
   }, []);
 
-  const isValid = selectedService && selectedMaster && selectedDate && selectedTime;
-
-  const handleBooking = useCallback(() => {
-    if (!isValid) {
-      if (!selectedService) scrollTo(servicesRef);
-      else if (!selectedMaster) scrollTo(mastersRef);
-      else if (!selectedDate) scrollTo(calendarRef);
-      else if (!selectedTime) scrollTo(timeRef);
-      return;
-    }
-
-    const data = {
-      service: selectedService,
-      master: selectedMaster,
-      date: selectedDate,
-      time: selectedTime
+  useEffect(() => {
+    const isStepValid = () => {
+      if (step === 0) return true;
+      if (step === 1) return !!bookingData.service;
+      if (step === 2) return !!bookingData.master;
+      if (step === 3) return !!bookingData.date;
+      if (step === 4) return !!bookingData.time;
+      return false;
     };
 
-    setBookingData(data);
-    
-    // Send data to Telegram Bot (wrapped in SDK logic)
-    sendData(data);
-    
-    triggerHaptic('success');
-    setShowSuccess(true);
-  }, [isValid, selectedService, selectedMaster, selectedDate, selectedTime, sendData, triggerHaptic]);
-
-  // Telegram MainButton integration
-  useEffect(() => {
     const tg = window.Telegram?.WebApp;
     if (tg?.MainButton) {
-      const mb = tg.MainButton;
-      
-      const onMainButtonClick = () => {
-        triggerHaptic('medium'); // Immediate feedback
-        handleBooking();
-      };
-
-      if (isValid && !showSuccess) {
-        mb.setParams({
-          text: t.bookNow.toUpperCase(),
-          color: '#D4AF37',
-          text_color: '#0F0F0F',
-          is_visible: true,
-          is_active: true
+      if (isStepValid() && step > 0 && !showSuccess && !showCheckout) {
+        tg.MainButton.setText(step === 4 ? t.confirmBooking.toUpperCase() : t.bookNow.toUpperCase());
+        tg.MainButton.show();
+        tg.MainButton.onClick(() => {
+          if (step < 4) setStep(prev => prev + 1);
+          else handleBooking();
         });
-        mb.onClick(onMainButtonClick);
       } else {
-        mb.hide();
+        tg.MainButton.hide();
       }
-
-      return () => {
-        mb.offClick(onMainButtonClick);
-      };
     }
-  }, [isValid, showSuccess, t.bookNow, handleBooking, triggerHaptic]);
+
+    return () => {
+      if (tg?.MainButton) {
+        tg.MainButton.offClick();
+      }
+    };
+  }, [step, bookingData, t, handleBooking, showSuccess, showCheckout]);
+
+  if (showSuccess) return <SuccessScreen bookingData={bookingData} onClose={() => {
+    setShowSuccess(false);
+    setStep(0);
+  }} />;
 
   return (
-    <div className="min-h-screen bg-dark pb-60">
-      <SuccessScreen 
-        isVisible={showSuccess} 
-        bookingData={bookingData} 
-        onClose={() => setShowSuccess(false)}
+    <div className="min-h-screen bg-dark safe-top safe-bottom pb-60 relative overflow-x-hidden select-none">
+      <div className="wood-pattern fixed inset-0 z-0 opacity-10 pointer-events-none" />
+      
+      <header className="relative z-20 px-6 py-6 flex justify-between items-center bg-gradient-to-b from-dark to-transparent backdrop-blur-sm sticky top-0">
+        <LangSwitcher />
+        <button 
+          onClick={() => setIsProfileOpen(true)}
+          className="w-12 h-12 bg-white/5 border border-gold/20 rounded-2xl flex items-center justify-center text-gold shadow-gold-glow hover:bg-gold/10 transition-all active:scale-90"
+        >
+          <UserCircle size={28} strokeWidth={1.5} />
+        </button>
+      </header>
+
+      <main className="relative z-10 px-4">
+        <AnimatePresence mode="wait">
+          {showCheckout ? (
+            <CheckoutForm 
+              key="checkout"
+              onSubmit={handleCheckoutSubmit}
+              onBack={() => setShowCheckout(false)}
+              triggerHaptic={triggerHaptic}
+            />
+          ) : (
+            <motion.div
+              key={step}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              {step === 0 && <Hero onStartBooking={() => setStep(1)} />}
+              {step === 1 && (
+                <Services 
+                  selectedService={bookingData.service}
+                  onSelect={(s) => {
+                    setBookingData({...bookingData, service: s});
+                    setStep(2);
+                    triggerHaptic('light');
+                  }}
+                />
+              )}
+              {step === 2 && (
+                <Masters 
+                  selectedMaster={bookingData.master}
+                  onSelect={(m) => {
+                    setBookingData({...bookingData, master: m});
+                    setStep(3);
+                    triggerHaptic('light');
+                  }}
+                />
+              )}
+              {step === 3 && (
+                <BookingCalendar 
+                  selectedDate={bookingData.date}
+                  onSelect={(d) => {
+                    setBookingData({...bookingData, date: d});
+                    setStep(4);
+                    triggerHaptic('light');
+                  }}
+                />
+              )}
+              {step === 4 && (
+                <TimePicker 
+                  selectedTime={bookingData.time}
+                  onSelect={(tm) => {
+                    setBookingData({...bookingData, time: tm});
+                    triggerHaptic('light');
+                  }}
+                />
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </main>
+
+      <UserProfile 
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+        userData={bookingData.client}
+        bookings={userBookings}
       />
 
-      <div className="safe-top">
-        <LangSwitcher />
-      </div>
-      
-      <Hero onStartBooking={() => scrollTo(servicesRef)} />
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-      >
-        <div ref={servicesRef} id="services-section">
-          <Services 
-            selectedService={selectedService} 
-            onSelect={(s) => {
-              setSelectedService(s);
-              triggerHaptic('light');
-              // Small delay to allow the next section to appear in DOM before scrolling
-              setTimeout(() => scrollTo(mastersRef), 100);
-            }} 
-          />
+      {(!window.Telegram?.WebApp?.MainButton?.isVisible) && step > 0 && !showSuccess && !showCheckout && (
+        <div className="fixed bottom-10 left-0 right-0 px-6 z-50">
+          <motion.button
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            onClick={() => {
+              if (step < 4) setStep(prev => prev + 1);
+              else handleBooking();
+            }}
+            disabled={
+              (step === 1 && !bookingData.service) ||
+              (step === 2 && !bookingData.master) ||
+              (step === 3 && !bookingData.date) ||
+              (step === 4 && !bookingData.time)
+            }
+            className="w-full bg-gradient-to-r from-gold to-gold-light text-dark font-black py-5 rounded-2xl uppercase tracking-widest shadow-gold-glow disabled:opacity-50 disabled:shadow-none active:scale-[0.98] transition-all"
+          >
+            {step === 4 ? t.confirmBooking : t.bookNow}
+          </motion.button>
         </div>
-
-        <AnimatePresence>
-          {selectedService && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden"
-              ref={mastersRef}
-            >
-              <Masters 
-                selectedMaster={selectedMaster} 
-                onSelect={(m) => {
-                  setSelectedMaster(m);
-                  triggerHaptic('light');
-                  setTimeout(() => scrollTo(calendarRef), 100);
-                }} 
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {selectedMaster && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden"
-              ref={calendarRef}
-            >
-              <BookingCalendar 
-                selectedDate={selectedDate} 
-                onSelect={(d) => {
-                  setSelectedDate(d);
-                  triggerHaptic('light');
-                  setTimeout(() => scrollTo(timeRef), 100);
-                }} 
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {selectedDate && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              className="overflow-hidden"
-              ref={timeRef}
-            >
-              <TimePicker 
-                selectedTime={selectedTime} 
-                onSelect={(t) => {
-                  setSelectedTime(t);
-                  triggerHaptic('light');
-                }} 
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      <div className="safe-bottom">
-        <BookingButton 
-          bookingData={bookingData} 
-          isValid={isValid} 
-          isVisible={!(isTelegram && isValid)}
-          onBook={handleBooking} 
-        />
-      </div>
-
-      <div className="fixed inset-0 pointer-events-none wood-pattern z-0 opacity-[0.03]" />
+      )}
     </div>
   );
-}
+};
 
 export default App;
